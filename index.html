@@ -32,7 +32,7 @@
       <!-- Syntax Help -->
       <div class="syntax-help">
         <h6><i class="bi bi-info-circle"></i> Składnia języka Avocado:</h6>
-        <code><span class="keyword">liczba_całkowita</span> <span class="variable">x</span> <span class="operator">:=</span> <span class="number">42</span></code> - deklaracja zmiennej<br>
+        <code><span class="keyword">liczba_całkowita</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">42</span></code> - deklaracja zmiennej<br>
         <code><span class="keyword">dodaj</span> <span class="variable">x</span> <span class="number">8</span></code> - operacja dodawania
       </div>
 
@@ -109,28 +109,6 @@
  <script src="tokenize.js"></script>
  <script src="parser.js"></script>
   <script>
-    // let symbolTable = {};
-
-    // function tokenize(input) {
-    //   return input.trim().split(/\s+/);
-    // }
-
-    // function parse(tokens) {
-    //   if (tokens[0] === 'liczba_całkowita') {
-    //     const name = tokens[1];
-    //     if (tokens[2] !== ':=' || isNaN(Number(tokens[3]))) {
-    //       throw new Error('Błąd składni w deklaracji liczby_całkowitej');
-    //     }
-    //     symbolTable[name] = Number(tokens[3]);
-    //     return { type: 'Declare', name, value: symbolTable[name] };
-    //   }
-    //   if (tokens[0] === 'dodaj') {
-    //     const left = isNaN(Number(tokens[1])) ? symbolTable[tokens[1]] : Number(tokens[1]);
-    //     const right = isNaN(Number(tokens[2])) ? symbolTable[tokens[2]] : Number(tokens[2]);
-    //     return { type: 'Add', left, right };
-    //   }
-    //   throw new Error('Nieznane polecenie: ' + tokens[0]);
-    // }
 
     function generateJS(ast) {
       if (ast.type === 'Declare') {
@@ -291,7 +269,7 @@
 
     // Initialize with example code
     window.addEventListener('load', function() {
-      document.getElementById('input').value = 'liczba_całkowita x := 42\ndodaj x 8';
+      document.getElementById('input').value = 'liczba_całkowita x = 42\ndodaj x 8';
     });
   </script>
 </body>
