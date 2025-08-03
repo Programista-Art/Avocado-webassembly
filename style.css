@@ -1,0 +1,233 @@
+:root {
+      --primary-color: #2d3748;
+      --secondary-color: #4a5568;
+      --accent-color: #68d391;
+      --bg-color: #1a202c;
+      --card-bg: #2d3748;
+      --text-light: #e2e8f0;
+      --border-color: #4a5568;
+    }
+
+    body {
+      background: #0d1117;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #f0f6fc;
+    }
+
+    .navbar {
+      background: #161b22 !important;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      color: #58a6ff !important;
+    }
+
+    .main-container {
+      background: #0d1117;
+      border-radius: 12px;
+      border: 1px solid #30363d;
+      margin-top: 2rem;
+      padding: 1rem;
+      min-height: calc(100vh - 120px);
+    }
+
+    .editor-panel {
+      background: #161b22;
+      border-radius: 12px;
+      border: 1px solid #30363d;
+      height: calc(100vh - 300px);
+      min-height: 500px;
+    }
+
+    .editor-header {
+      background: #21262d;
+      color: #f0f6fc;
+      padding: 1rem;
+      border-radius: 12px 12px 0 0;
+      border-bottom: 1px solid #30363d;
+      font-weight: 600;
+    }
+
+    .code-editor {
+      background: #0d1117;
+      color: #f0f6fc;
+      border: none;
+      border-radius: 0 0 12px 12px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: none;
+      height: calc(100% - 70px);
+      padding: 1rem;
+      tab-size: 2;
+    }
+
+    .code-editor:focus {
+      box-shadow: 0 0 0 2px var(--accent-color);
+      outline: none;
+    }
+
+    .output-panel {
+      background: #161b22;
+      border-radius: 12px;
+      border: 1px solid #30363d;
+      margin-bottom: 1rem;
+      height: 200px;
+    }
+
+    .output-header {
+      background: #21262d;
+      color: #f0f6fc;
+      padding: 0.75rem 1rem;
+      border-radius: 12px 12px 0 0;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .output-content {
+      background: #0d1117;
+      color: #f0f6fc;
+      padding: 1rem;
+      border-radius: 0 0 12px 12px;
+      font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      height: calc(100% - 50px);
+      overflow-y: auto;
+    }
+
+    .btn-group-custom {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid #30363d;
+      margin-top: 1rem;
+    }
+
+    .btn-custom {
+      background: linear-gradient(45deg, #238636, #2ea043);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      margin: 0.25rem;
+    }
+
+    .btn-custom:hover {
+      background: linear-gradient(45deg, #2ea043, #238636);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(46, 160, 67, 0.3);
+      color: white;
+    }
+
+    .btn-secondary-custom {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #f0f6fc;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      margin: 0.25rem;
+    }
+
+    .btn-secondary-custom:hover {
+      background: #30363d;
+      border-color: #484f58;
+      color: #f0f6fc;
+      transform: translateY(-1px);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .syntax-help {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #f0f6fc;
+    }
+
+    .success-text {
+      color: #7ee787;
+    }
+
+    .error-text {
+      color: #f85149;
+    }
+
+    .keyword {
+      color: #ff7b72;
+      font-weight: bold;
+    }
+
+    .number {
+      color: #79c0ff;
+    }
+
+    .operator {
+      color: #ff7b72;
+    }
+
+    .variable {
+      color: #ffa657;
+    }
+
+    .comment {
+      color: #8b949e;
+      font-style: italic;
+    }
+
+    .scrollbar-custom::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    .scrollbar-custom::-webkit-scrollbar-track {
+      background: #0d1117;
+    }
+
+    .scrollbar-custom::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 6px;
+    }
+
+    .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+      background: #484f58;
+    }
+
+    .navbar-text {
+      color: #7d8590 !important;
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        margin: 1rem;
+        border-radius: 15px;
+      }
+      
+      .btn-group-custom {
+        text-align: center;
+      }
+      
+      .btn-custom, .btn-secondary-custom {
+        width: 100%;
+        margin: 0.5rem 0;
+      }
+    }

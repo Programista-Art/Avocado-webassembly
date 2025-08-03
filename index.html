@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avocado Compiler - IDE</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- CodeMirror for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-code-slash"></i> Avocado IDE
+      </a>
+      <div class="navbar-nav ms-auto">
+        <span class="navbar-text">
+          <i class="bi bi-cpu"></i> JavaScript / WebAssembly Compiler
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid" style="margin-top: 80px;">
+    <div class="main-container">
+      <!-- Syntax Help -->
+      <div class="syntax-help">
+        <h6><i class="bi bi-info-circle"></i> Składnia języka Avocado:</h6>
+        <code><span class="keyword">liczba_całkowita</span> <span class="variable">x</span> <span class="operator">:=</span> <span class="number">42</span></code> - deklaracja zmiennej<br>
+        <code><span class="keyword">dodaj</span> <span class="variable">x</span> <span class="number">8</span></code> - operacja dodawania
+      </div>
+
+      <div class="row">
+        <!-- Left Side - Code Editor -->
+        <div class="col-lg-6">
+          <div class="editor-panel">
+            <div class="editor-header">
+              <h5><i class="bi bi-file-code"></i> Edytor kodu Avocado</h5>
+            </div>
+            <textarea id="input" class="form-control code-editor scrollbar-custom" placeholder="liczba_całkowita x := 42&#10;dodaj x 8"></textarea>
+          </div>
+
+          <!-- Control Buttons -->
+          <div class="btn-group-custom">
+            <button class="btn btn-custom" onclick="compileAvocado()">
+              <i class="bi bi-play-circle"></i> Kompiluj do JS
+            </button>
+            <button class="btn btn-custom" onclick="compileWat()">
+              <i class="bi bi-cpu"></i> Kompiluj do WAT
+            </button>
+            <button class="btn btn-secondary-custom" onclick="downloadWat()">
+              <i class="bi bi-download"></i> Pobierz WAT
+            </button>
+            <div class="file-input-wrapper">
+              <input type="file" id="fileInput" accept=".wat" onchange="loadWatFromFile(event)">
+              <button class="btn btn-secondary-custom" onclick="document.getElementById('fileInput').click()">
+                <i class="bi bi-upload"></i> Wczytaj WAT
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side - Output Panels -->
+        <div class="col-lg-6">
+          <div class="output-panel">
+            <div class="output-header">
+              <i class="bi bi-filetype-js"></i> Wygenerowany kod JavaScript
+            </div>
+            <div id="output" class="output-content scrollbar-custom"></div>
+          </div>
+          
+          <div class="output-panel">
+            <div class="output-header">
+              <i class="bi bi-terminal"></i> Wynik działania JS
+            </div>
+            <div id="result" class="output-content scrollbar-custom"></div>
+          </div>
+
+          <div class="output-panel">
+            <div class="output-header">
+              <i class="bi bi-file-binary"></i> Wygenerowany kod WebAssembly (.wat)
+            </div>
+            <div id="wat" class="output-content scrollbar-custom"></div>
+          </div>
+          
+          <div class="output-panel">
+            <div class="output-header">
+              <i class="bi bi-gear"></i> Wynik działania WASM
+            </div>
+            <div id="wasm-result" class="output-content scrollbar-custom"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/wabt@1.0.37/index.js"></script>
+  <script>
+    window.wabtReady = WabtModule();
+  </script>
+ <script src="tokenize.js"></script>
+ <script src="parser.js"></script>
+  <script>
+    // let symbolTable = {};
+
+    // function tokenize(input) {
+    //   return input.trim().split(/\s+/);
+    // }
+
+    // function parse(tokens) {
+    //   if (tokens[0] === 'liczba_całkowita') {
+    //     const name = tokens[1];
+    //     if (tokens[2] !== ':=' || isNaN(Number(tokens[3]))) {
+    //       throw new Error('Błąd składni w deklaracji liczby_całkowitej');
+    //     }
+    //     symbolTable[name] = Number(tokens[3]);
+    //     return { type: 'Declare', name, value: symbolTable[name] };
+    //   }
+    //   if (tokens[0] === 'dodaj') {
+    //     const left = isNaN(Number(tokens[1])) ? symbolTable[tokens[1]] : Number(tokens[1]);
+    //     const right = isNaN(Number(tokens[2])) ? symbolTable[tokens[2]] : Number(tokens[2]);
+    //     return { type: 'Add', left, right };
+    //   }
+    //   throw new Error('Nieznane polecenie: ' + tokens[0]);
+    // }
+
+    function generateJS(ast) {
+      if (ast.type === 'Declare') {
+        return `let ${ast.name} = ${ast.value};`;
+      }
+      if (ast.type === 'Add') {
+        return `console.log(${ast.left} + ${ast.right});`;
+      }
+    }
+
+    function generateWAT(ast) {
+      if (ast.type === 'Add') {
+        return `(module
+  (func $main (export "main") (result i32)
+    i32.const ${ast.left}
+    i32.const ${ast.right}
+    i32.add
+  )
+)`;
+      }
+      return null;
+    }
+
+    function applySyntaxHighlighting(code) {
+      return code
+        .replace(/\b(liczba_całkowita|dodaj)\b/g, '<span class="keyword">$1</span>')
+        .replace(/\b(\d+)\b/g, '<span class="number">$1</span>')
+        .replace(/(:=)/g, '<span class="operator">$1</span>')
+        .replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b(?!<\/span>)/g, function(match) {
+          if (!['liczba_całkowita', 'dodaj'].includes(match)) {
+            return '<span class="variable">' + match + '</span>';
+          }
+          return match;
+        });
+    }
+
+    function showSuccess(elementId, message, highlight = false) {
+      const element = document.getElementById(elementId);
+      if (highlight && (elementId === 'output' || elementId === 'wat')) {
+        element.innerHTML = `<span class="success-text">${applySyntaxHighlighting(message)}</span>`;
+      } else {
+        element.innerHTML = `<span class="success-text">${message}</span>`;
+      }
+    }
+
+    function showError(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<span class="error-text">Błąd: ${message}</span>`;
+    }
+
+    function compileAvocado() {
+      const input = document.getElementById('input').value;
+      if (!input.trim()) {
+        showError('output', 'Wprowadź kod do kompilacji');
+        showError('result', 'Brak kodu do wykonania');
+        return;
+      }
+
+      symbolTable = {};
+      const lines = input.split('\n');
+      let output = '';
+      let result = '';
+
+      const originalLog = console.log;
+      console.log = (msg) => { result += msg + '\n'; };
+
+      try {
+        for (const line of lines) {
+          if (line.trim()) {
+            const tokens = tokenize(line);
+            const ast = parse(tokens);
+            const js = generateJS(ast);
+            output += js + '\n';
+            eval(js);
+          }
+        }
+        document.getElementById('output').innerHTML = `<span class="success-text">${output.trim()}</span>`;
+        document.getElementById('result').innerHTML = `<span class="success-text">${result || 'Wykonano pomyślnie'}</span>`;
+      } catch (err) {
+        showError('output', err.message);
+        showError('result', 'Kompilacja nieudana');
+      } finally {
+        console.log = originalLog;
+      }
+    }
+
+    function compileWat() {
+      const input = document.getElementById('input').value;
+      if (!input.trim()) {
+        showError('wat', 'Wprowadź kod do kompilacji');
+        return;
+      }
+
+      symbolTable = {};
+      const lines = input.split('\n');
+      let watOutput = '';
+
+      try {
+        for (const line of lines) {
+          if (line.trim()) {
+            const tokens = tokenize(line);
+            const ast = parse(tokens);
+            const wat = generateWAT(ast);
+            if (wat) watOutput = wat;
+          }
+        }
+        if (watOutput) {
+          document.getElementById('wat').innerHTML = `<span class="success-text">${watOutput.trim()}</span>`;
+        } else {
+          showError('wat', 'Nie można wygenerować kodu WAT dla tego typu operacji');
+        }
+      } catch (err) {
+        showError('wat', err.message);
+      }
+    }
+
+    function downloadWat() {
+      const watCode = document.getElementById('wat').textContent;
+      if (!watCode.trim() || watCode.includes('Błąd:')) {
+        alert('Najpierw wygeneruj poprawny kod WAT');
+        return;
+      }
+      
+      const blob = new Blob([watCode], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'program.wat';
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      showSuccess('wat', watCode + '\n\n✓ Plik został pobrany');
+    }
+
+    async function loadWatFromFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const watCode = e.target.result;
+        document.getElementById('wat').innerHTML = `<span class="success-text">${watCode}</span>`;
+        
+        try {
+          showSuccess('wasm-result', 'Kompilowanie WASM...');
+          const wabt = await window.wabtReady;
+          const wasmModule = wabt.parseWat("loaded.wat", watCode);
+          const { buffer } = wasmModule.toBinary({ log: false });
+          const { instance } = await WebAssembly.instantiate(buffer);
+          const result = instance.exports.main();
+          showSuccess('wasm-result', `Wynik: ${result}`);
+        } catch (err) {
+          showError('wasm-result', err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Initialize with example code
+    window.addEventListener('load', function() {
+      document.getElementById('input').value = 'liczba_całkowita x := 42\ndodaj x 8';
+    });
+  </script>
+</body>
+</html>
