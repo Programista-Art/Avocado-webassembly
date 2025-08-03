@@ -12,5 +12,11 @@
         const right = isNaN(Number(tokens[2])) ? symbolTable[tokens[2]] : Number(tokens[2]);
         return { type: 'Add', left, right };
       }
+      //funkcja pisz('Siema')
+        if (tokens[0].startsWith('pisz')) {
+        const textMatch = /pisz\(['"](.+?)['"]\)/.exec(tokens.join(' '));
+        if (!textMatch) throw new Error('Niepoprawna składnia funkcji pisz()');
+        return { type: 'Print', value: textMatch[1] };
+      }
       throw new Error('Nieznane polecenie: ' + tokens[0]);
     }

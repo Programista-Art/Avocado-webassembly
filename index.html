@@ -34,6 +34,7 @@
         <h6><i class="bi bi-info-circle"></i> Składnia języka Avocado:</h6>
         <code><span class="keyword">liczba_całkowita</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">42</span></code> - deklaracja zmiennej<br>
         <code><span class="keyword">dodaj</span> <span class="variable">x</span> <span class="number">8</span></code> - operacja dodawania
+        <br> <code><span class="keyword">pisz("Siema") </code> - Wypisuje dane na wyjście w konsoli bez dodawania znaku nowej linii.
       </div>
 
       <div class="row">
@@ -108,16 +109,21 @@
   </script>
  <script src="tokenize.js"></script>
  <script src="parser.js"></script>
+  <script src="generatejs.js"></script>
   <script>
-
-    function generateJS(ast) {
-      if (ast.type === 'Declare') {
-        return `let ${ast.name} = ${ast.value};`;
-      }
-      if (ast.type === 'Add') {
-        return `console.log(${ast.left} + ${ast.right});`;
-      }
-    }
+ 
+    // funkcja w osobnym pliku generatejs.js
+    // function generateJS(ast) {
+    //   if (ast.type === 'Declare') {
+    //     return `let ${ast.name} = ${ast.value};`;
+    //   }
+    //   if (ast.type === 'Add') {
+    //     return `console.log(${ast.left} + ${ast.right});`;
+    //   }
+    //   if (ast.type === 'Print') {
+    //     return `document.getElementById('result').textContent += ${JSON.stringify(ast.value)};`;
+    //   }
+    // }
 
     function generateWAT(ast) {
       if (ast.type === 'Add') {
@@ -270,6 +276,7 @@
     // Initialize with example code
     window.addEventListener('load', function() {
       document.getElementById('input').value = 'liczba_całkowita x = 42\ndodaj x 8';
+      // document.getElementById('input').value = 'pisz("siema")';
     });
   </script>
 </body>
