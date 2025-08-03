@@ -21,6 +21,15 @@
       if (ast.type === 'Add') {
         return `console.log(${ast.left} + ${ast.right});`;
       }
+        if (ast.type === 'Sub') {
+        return `console.log(${ast.left} - ${ast.right});`;
+      }
+       if (ast.type === 'Mul') {
+        return `console.log(${ast.left} * ${ast.right});`;
+      }
+        if (ast.type === 'Div') {
+        return `console.log(${ast.left} / ${ast.right});`;
+      }
         if (ast.type === 'Print') {
         return `console.log(${JSON.stringify(ast.value)});`;
       }

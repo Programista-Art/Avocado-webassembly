@@ -1,5 +1,6 @@
-let symbolTable = {};
-
-    function tokenize(input) {
-      return input.trim().split(/\s+/);
-    }
+function tokenize(input) {
+  return input
+    .replace(/([+\-*/=()])/g, ' $1 ') // dodaj spacje wokół operatorów
+    .trim()
+    .split(/\s+/);
+}
