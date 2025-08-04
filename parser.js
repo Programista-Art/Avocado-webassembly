@@ -75,12 +75,20 @@ function parse(tokens) {
     return { type: 'Declare', name, value };
   }
 
-  // funkcja pisz('coś')
-  if (tokens[0].startsWith('pisz')) {
-    const textMatch = /pisz\(['"](.+?)['"]\)/.exec(tokens.join(' '));
-    if (!textMatch) throw new Error('Niepoprawna składnia funkcji pisz()');
-    return { type: 'Print', value: textMatch[1] };
-  }
+  // // funkcja pisz('coś')
+  // if (tokens[0].startsWith('pisz')) {
+  //   const textMatch = /pisz\(['"](.+?)['"]\)/.exec(tokens.join(' '));
+  //   if (!textMatch) throw new Error('Niepoprawna składnia funkcji pisz()');
+  //   return { type: 'Print', value: textMatch[1] };
+  // }
+  if (tokens[0] === 'pisz' && tokens[1] === '(' && tokens[tokens.length - 1] === ')') {
+  // Zakładamy że tekst to jeden token w cudzysłowie, np. '"Hello"' (zawiera cudzysłowy)
+  const contentToken = tokens.slice(2, -1).join(' ');
+  const match = /^["'](.*)["']$/.exec(contentToken);
+  if (!match) throw new Error('Niepoprawny tekst w funkcji pisz()');
+  return { type: 'Print', value: match[1] };
+}
+
 
   // wyrażenie ogólne (np. 2 + 3 * 4 lub x + 1)
   return parseExpression();
