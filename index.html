@@ -26,7 +26,7 @@
       </div>
     </div>
   </nav>
-
+<!--  -->
   <div class="container-fluid" style="margin-top: 80px;">
     <div class="main-container">
       <!-- Syntax Help -->
@@ -48,7 +48,7 @@
             <textarea id="input" class="form-control code-editor scrollbar-custom" placeholder="liczba_całkowita x := 42&#10;dodaj x 8"></textarea>
           </div>
 
-          <!-- Control Buttons -->
+                  <!-- Control Buttons -->
           <div class="btn-group-custom">
             <button class="btn btn-custom" onclick="compileAvocado()">
               <i class="bi bi-play-circle"></i> Kompiluj do JS
@@ -65,9 +65,35 @@
                 <i class="bi bi-upload"></i> Wczytaj WAT
               </button>
             </div>
-          </div>
-        </div>
 
+            <!-- Nowe przyciski do zapisu -->
+            <button class="btn btn-secondary-custom" onclick="zapiszJS()">
+              <i class="bi bi-file-earmark-code"></i> Zapisz JS
+            </button>
+
+            <button class="btn btn-secondary-custom" onclick="zapiszAvocadoIZJS()">
+              <i class="bi bi-file-earmark-arrow-down"></i> Zapisz Avocado + JS
+            </button>
+          </div>
+
+                <!-- Otwórz kod JS -->
+            <div class="file-input-wrapper">
+              <input type="file" id="fileInputJS" accept=".js" style="display: none;" onchange="zaladujJS()">
+              <button class="btn btn-secondary-custom" onclick="document.getElementById('fileInputJS').click()">
+                <i class="bi bi-upload"></i> Otwórz kod JS
+              </button>
+            </div>
+
+            <!-- Załaduj Avocado + JS -->
+            <div class="file-input-wrapper">
+              <input type="file" id="fileInputAvocadoJS" accept=".avocado,.txt" style="display: none;" onchange="zaladujAvocadoIZJS()">
+              <button class="btn btn-secondary-custom" onclick="document.getElementById('fileInputAvocadoJS').click()">
+                <i class="bi bi-upload"></i> Załaduj Avocado + JS
+              </button>
+            </div>
+          </div>   
+
+        <!-- <button onclick="zapisz()">Zapisz do pliku</button> -->
         <!-- Right Side - Output Panels -->
         <div class="col-lg-6">
           <div class="output-panel">
@@ -110,21 +136,11 @@
   </script>
  <script src="tokenize.js"></script>
  <script src="parser.js"></script>
-  <script src="generatejs.js"></script>
-  <script>
- 
-    // funkcja w osobnym pliku generatejs.js
-    // function generateJS(ast) {
-    //   if (ast.type === 'Declare') {
-    //     return `let ${ast.name} = ${ast.value};`;
-    //   }
-    //   if (ast.type === 'Add') {
-    //     return `console.log(${ast.left} + ${ast.right});`;
-    //   }
-    //   if (ast.type === 'Print') {
-    //     return `document.getElementById('result').textContent += ${JSON.stringify(ast.value)};`;
-    //   }
-    // }
+ <script src="generatejs.js"></script>
+ <script src="save_source_code.js"></script>
+ <script>
+
+  
 
     function generateWAT(ast) {
       if (ast.type === 'Add') {
